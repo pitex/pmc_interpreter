@@ -1,0 +1,16 @@
+#ifndef COM_GITHUB_PITEX_PMC_INTERPRETER_PROCESSOR_CACHE_TYPE_H_
+#define COM_GITHUB_PITEX_PMC_INTERPRETER_PROCESSOR_CACHE_TYPE_H_
+
+namespace processor {
+
+enum CacheType {
+  IR,
+  PC,
+  AC,
+  OP,
+  CACHE_TYPE_LENGTH,
+};
+
+}  // namespace processor
+
+#endif  // COM_GITHUB_PITEX_PMC_INTERPRETER_PROCESSOR_CACHE_TYPE_H_

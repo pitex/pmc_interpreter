@@ -61,5 +61,8 @@ int main(int argc, char *argv[]) {
   proc.set_verbose(arguments.params["verbose"]);
   proc.set_line_by_line(arguments.params["line_by_line"]);
 
-  return proc.RunPMC();
+  int error_code = proc.RunPMC();
+  proc.PrintState();
+
+  return error_code;
 }

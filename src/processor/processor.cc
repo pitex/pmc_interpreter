@@ -118,7 +118,7 @@ ErrorCode Processor::RunCommand(const int& memory) {
     }
     case (command::Type::STORE): {
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
-      if (verbose_) std::cout << "STORE: M[OP]=" << cache_[CacheType::AC] << std::endl;
+      if (verbose_) std::cout << "STORE: M[" << cache_[CacheType::OP] << "]=" << cache_[CacheType::AC] << std::endl;
       memory_[CacheType::OP].set_value(cache_[CacheType::AC]);
       used_memory_[CacheType::OP] = true;
       return ErrorCode::CONTINUE;

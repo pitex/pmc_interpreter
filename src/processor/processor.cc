@@ -112,7 +112,7 @@ ErrorCode Processor::RunPMC() {
 void Processor::PrintState() {
   std::cout << "PMC state:" << std::endl;
   for (auto it = used_memory_.begin(); it != used_memory_.end(); ++it) {
-    std::cout << it->first << ": " << memory_[it->second] << std::endl;
+    std::cout << it->first << ": " << memory_[it->first] << std::endl;
   }
 }
 

@@ -21,7 +21,7 @@ class Command {
   friend std::ostream &operator << (std::ostream& out, const Command& cmd) {
     const std::string type = kTypeToString.find(cmd.type_)->second;
     const char addressing = kAddressingToCharacter.find(cmd.addressing_type_)->second;
-    out << "Command(" << type << " " << addressing << " " << cmd.value_ << ")" << std::endl;
+    out << "Command(" << type << " " << addressing << " " << cmd.value_ << ")";
     return out;
   }
 

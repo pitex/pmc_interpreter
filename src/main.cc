@@ -15,12 +15,11 @@ struct Arguments {
 };
 
 int Arguments::ParseArguments(const int& argc, char *argv[]) {
-  int it = 1;
   int files = 0;
   Arguments arguments;
 
-  while (it < argc) {
-    std::string arg(argv[it]);
+  for (int i = 0; i < argc; ++i) {
+    std::string arg(argv[i]);
 
     if (arg.substr(0, 2) == "--") {
       arguments.params[arg] = true;

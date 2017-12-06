@@ -112,17 +112,20 @@ ErrorCode Processor::RunCommand(const int& memory) {
   switch (current_command.type()) {
     case (command::Type::LOAD): {
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
+      if (verbose_) std::cout << "LOAD: AC=" << cache_[CacheType::OP] << std::endl;
       cache_[CacheType::AC] = cache_[CacheType::OP];
       return ErrorCode::CONTINUE;
     }
     case (command::Type::STORE): {
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
+      if (verbose_) std::cout << "STORE: M[OP]=" << cache_[CacheType::AC] << std::endl;
       memory_[CacheType::OP].set_value(cache_[CacheType::AC]);
       used_memory_[CacheType::OP] = true;
       return ErrorCode::CONTINUE;
     }
     case (command::Type::JUMP): {
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
+      if (verbose_) std::cout << "JUMP: PC=" << cache_[CacheType::OP] << std::endl;
       cache_[CacheType::PC] = cache_[CacheType::OP];
       return ErrorCode::CONTINUE;
     }
@@ -131,6 +134,7 @@ ErrorCode Processor::RunCommand(const int& memory) {
         return ErrorCode::CONTINUE;
       }
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
+      if (verbose_) std::cout << "JNEG: PC=" << cache_[CacheType::OP] << std::endl;
       cache_[CacheType::PC] = cache_[CacheType::OP];
       return ErrorCode::CONTINUE;
     }
@@ -139,47 +143,57 @@ ErrorCode Processor::RunCommand(const int& memory) {
         return ErrorCode::CONTINUE;
       }
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
+      if (verbose_) std::cout << "JZERO: PC=" << cache_[CacheType::OP] << std::endl;
       cache_[CacheType::PC] = cache_[CacheType::OP];
       return ErrorCode::CONTINUE;
     }
     case (command::Type::STOP): {
+      if (verbose_) std::cout << "STOP" << std::endl;
       return ErrorCode::COMPLETED;
     }
     case (command::Type::NILL): {
+      if (verbose_) std::cout << "NULL" << std::endl;
       ++cache_[CacheType::PC];
       return ErrorCode::CONTINUE;
     }
     case (command::Type::ADD): {
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
+      if (verbose_) std::cout << "ADD: AC=" << (cache_[CacheType::AC] + cache_[CacheType::OP]) << std::endl;
       cache_[CacheType::AC] += cache_[CacheType::OP];
       return ErrorCode::CONTINUE;
     }
     case (command::Type::SUB): {
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
+      if (verbose_) std::cout << "SUB: AC=" << (cache_[CacheType::AC] - cache_[CacheType::OP]) << std::endl;
       cache_[CacheType::AC] -= cache_[CacheType::OP];
       return ErrorCode::CONTINUE;
     }
     case (command::Type::AND): {
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
+      if (verbose_) std::cout << "AND: AC=" << (cache_[CacheType::AC] & cache_[CacheType::OP]) << std::endl;
       cache_[CacheType::AC] &= cache_[CacheType::OP];
       return ErrorCode::CONTINUE;
     }
     case (command::Type::OR): {
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
+      if (verbose_) std::cout << "OR: AC=" << (cache_[CacheType::AC] | cache_[CacheType::OP]) << std::endl;
       cache_[CacheType::AC] |= cache_[CacheType::OP];
       return ErrorCode::CONTINUE;
     }
     case (command::Type::NOT): {
+      if (verbose_) std::cout << "NOT: AC=" << (~cache_[CacheType::AC]) << std::endl;
       cache_[CacheType::AC] = ~cache_[CacheType::AC];
       return ErrorCode::CONTINUE;
     }
     case (command::Type::SHL): {
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
+      if (verbose_) std::cout << "SHL: AC=" << (cache_[CacheType::AC] << cache_[CacheType::OP]) << std::endl;
       cache_[CacheType::AC] <<= cache_[CacheType::OP];
       return ErrorCode::CONTINUE;
     }
     case (command::Type::SHR): {
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
+      if (verbose_) std::cout << "SHR: AC=" << (cache_[CacheType::AC] >> cache_[CacheType::OP]) << std::endl;
       cache_[CacheType::AC] >>= cache_[CacheType::OP];
       return ErrorCode::CONTINUE;
     }

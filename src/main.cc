@@ -49,7 +49,11 @@ int Arguments::ParseArguments(const int& argc, char *argv[]) {
 int main(int argc, char *argv[]) {
   Arguments arguments;
   if (arguments.ParseArguments(argc, argv) < 0) {
-    std::cout << "USAGE: pmc_interpreter <cmd_file, input_file>";
+    std::cout << "USAGE: pmc_interpreter [options] <cmd_file, input_file>" << std::endl;
+    std::cout << std::endl;
+    std::cout << "OPTIONS:" << std::endl;
+    std::cout << "  --line_by_line  " << "Waits for enter key after every command. Highly recommended to use together with --verbose." << std::endl;
+    std::cout << "  --verbose       " << "Prints additional information." << std::endl;
   }
 
   std::ifstream cmd_file(arguments.cmd_file);

@@ -103,7 +103,7 @@ void Processor::PrintState() {
 ErrorCode Processor::RunCommand(const int& memory) {
   command::Command current_command = memory_[memory];
 
-  if (verbose_) std::cout << "Executing command: " << current_command << std::endl;
+  if (verbose_) std::cout << "Executing command: " << memory << ": " << current_command << std::endl;
 
   if (line_by_line_) {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');

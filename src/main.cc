@@ -58,6 +58,8 @@ int main(int argc, char *argv[]) {
   std::ifstream input_file(arguments.input_file);
 
   processor::Processor proc = processor::Processor(cmd_file, input_file);
+  proc.set_verbose(arguments.params["verbose"]);
+  proc.set_line_by_line(arguments.params["line_by_line"]);
 
   return proc.RunPMC();
 }

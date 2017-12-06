@@ -42,6 +42,24 @@ const std::map<std::string, Type> kStringToType = {
   {"VALUE", Type::VALUE}
 };
 
+const std::map<Type, std::string> kTypeToString = {
+  {Type::LOAD, "LOAD"},
+  {Type::STORE, "STORE"},
+  {Type::JUMP, "JUMP"},
+  {Type::JNEG, "JNEG"},
+  {Type::JZERO, "JZERO"},
+  {Type::STOP, "STOP"},
+  {Type::NILL, "NULL"},
+  {Type::ADD, "ADD"},
+  {Type::SUB, "SUB"},
+  {Type::AND, "AND"},
+  {Type::OR, "OR"},
+  {Type::NOT, "NOT"},
+  {Type::SHL, "SHL"},
+  {Type::SHR, "SHR"},
+  {Type::VALUE, "VALUE"}
+};
+
 }  // namespace command
 
 #endif  // COM_GITHUB_PITEX_PMC_INTERPRETER_COMMAND_TYPE_H_

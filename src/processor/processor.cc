@@ -1,6 +1,8 @@
 #include "src/processor/processor.h"
 
 #include <fstream>
+#include <iostream>
+#include <limits>
 #include <string>
 
 #include "src/command/addressing_type.h"
@@ -11,17 +13,29 @@ namespace processor {
 const int kMaxCycles = 1000000000;
 
 Processor::Processor(std::ifstream& cmd_file, std::ifstream& infile) {
+  if (verbose_) {
+    std::cout << "Beginning reading the command file" << std::endl;
+  }
   int command_number;
   cmd_file >> command_number;
 
   for (int i = 0; i < command_number; ++i) {
     ReadCommand(cmd_file);
   }
+  if (verbose_) {
+    std::cout << "Finished reading the command file" << std::endl;
+  }
 
   int input_length;
+  if (verbose_) {
+    std::cout << "Beginning reading the input file" << std::endl;
+  }
   infile >> input_length;
   for (int i = 0; i < input_length; ++i) {
     ReadInput(infile);
+  }
+  if (verbose_) {
+    std::cout << "Finished reading the input file" << std::endl;
   }
 }
 
@@ -34,12 +48,19 @@ void Processor::ReadCommand(std::ifstream& cmd_file) {
   memory = atoi(memory_str.substr(0, memory_str.length() - 1).c_str());
 
   if (command::kStringToType.find(type) == command::kStringToType.end()) {
+    if (verbose_) {
+      std::cout << "Read " << memory_str << " " << type << std::endl;
+    }
     memory_[memory] =
         command::Command(command::Type::VALUE, command::AddressingType::IMMEDIATE, atoi(type.c_str()));
     return;
   }
 
   cmd_file >> addressing_type >> value;
+
+  if (verbose_) {
+    std::cout << "Read " << memory_str << " " << type << " " << addressing_type << " " << value << std::endl;
+  }
 
   memory_[memory] =
       command::Command(
@@ -54,6 +75,10 @@ void Processor::ReadInput(std::ifstream& infile) {
 
   infile >> memory >> value;
 
+  if (verbose_) {
+    std::cout << "Read " << memory << " " << value << std::endl;
+  }
+
   memory_[atoi(memory.substr(0, memory.length() - 1).c_str())] =
       command::Command(command::Type::VALUE, command::AddressingType::IMMEDIATE, value);
 }
@@ -62,11 +87,19 @@ ErrorCode Processor::RunPMC() {
   ErrorCode return_value;
   int counter = 0;
 
+  if (verbose_) {
+    std::cout << "Running PMC" << std::endl;
+  }
+
   while ((return_value = RunCommand(++cache_[CacheType::PC])) > 0) {
     ++counter;
     if (counter > kMaxCycles) {
       return ErrorCode::TIME_LIMIT_EXCEEDED;
     }
+  }
+
+  if (verbose_) {
+    std::cout << "Finished PMC" << std::endl;
   }
 
   return return_value;
@@ -76,6 +109,14 @@ ErrorCode Processor::RunPMC() {
 
 ErrorCode Processor::RunCommand(const int& memory) {
   command::Command current_command = memory_[memory];
+
+  if (verbose_) {
+    std::cout << "Executing command: " << current_command << std::endl;
+  }
+
+  if (line_by_line_) {
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+  }
 
   switch (current_command.type()) {
     case (command::Type::LOAD): {
@@ -162,21 +203,26 @@ ErrorCode Processor::RunCommand(const int& memory) {
 #undef COUNT_OPERAND
 
 ErrorCode Processor::CountOperand(const command::AddressingType& addressing_type, const int& value) {
+  std::cout << "Counting OP" << std::endl;
   switch (addressing_type) {
     case (command::AddressingType::IMMEDIATE): {
       cache_[CacheType::OP] = value;
+      std::cout << "Done counting. OP=" << cache_[CacheType::OP] << std::endl;
       return ErrorCode::CONTINUE;
     }
     case (command::AddressingType::DIRECT): {
       cache_[CacheType::OP] = memory_[value].value();
+      std::cout << "Done counting. OP=" << cache_[CacheType::OP] << std::endl;
       return ErrorCode::CONTINUE;
     }
     case (command::AddressingType::INDIRECT): {
       cache_[CacheType::OP] = memory_[memory_[value].value()].value();
+      std::cout << "Done counting. OP=" << cache_[CacheType::OP] << std::endl;
       return ErrorCode::CONTINUE;
     }
     case (command::AddressingType::INDEX): {
       cache_[CacheType::OP] = memory_[cache_[CacheType::AC] + value].value();
+      std::cout << "Done counting. OP=" << cache_[CacheType::OP] << std::endl;
       return ErrorCode::CONTINUE;
     }
     default: {

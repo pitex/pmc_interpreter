@@ -79,7 +79,7 @@ ErrorCode Processor::RunPMC() {
 
   if (verbose_) std::cout << "Running PMC" << std::endl;
 
-  while ((return_value = RunCommand(++cache_[CacheType::PC])) > 0) {
+  while ((return_value = RunCommand(cache_[CacheType::PC]++)) > 0) {
     ++counter;
     if (counter > kMaxCycles) {
       return ErrorCode::TIME_LIMIT_EXCEEDED;

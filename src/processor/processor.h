@@ -2,6 +2,7 @@
 #define COM_GITHUB_PITEX_PMC_INTERPRETER_PROCESSOR_PROCESSOR_H_
 
 #include <fstream>
+#include <map>
 
 #include "src/command/command.h"
 #include "src/command/addressing_type.h"
@@ -15,6 +16,7 @@ class Processor {
   Processor(std::ifstream& cmd_file, std::ifstream& infile);
 
   ErrorCode RunPMC();
+  void PrintState();
 
   void set_line_by_line(bool line_by_line) { line_by_line_ = line_by_line; }
   void set_verbose(bool verbose) { verbose_ = verbose; }
@@ -28,6 +30,7 @@ class Processor {
   bool line_by_line_ = false;
   bool verbose_ = false;
   int cache_[CacheType::CACHE_TYPE_LENGTH] = {};
+  std::map<int, bool> used_memory_;
 };
 
 }  // namespace processor

@@ -53,6 +53,7 @@ void Processor::ReadCommand(std::ifstream& cmd_file) {
     }
     memory_[memory] =
         command::Command(command::Type::VALUE, command::AddressingType::IMMEDIATE, atoi(type.c_str()));
+    used_memory_[memory] = true;
     return;
   }
 
@@ -67,20 +68,23 @@ void Processor::ReadCommand(std::ifstream& cmd_file) {
           command::kStringToType.find(type)->second,
           command::kCharacterToAddressing.find(addressing_type)->second,
           value);
+  used_memory_[memory] = true;
 }
 
 void Processor::ReadInput(std::ifstream& infile) {
-  std::string memory;
+  std::string memory_str;
   int value;
 
-  infile >> memory >> value;
+  infile >> memory_str >> value;
 
   if (verbose_) {
-    std::cout << "Read " << memory << " " << value << std::endl;
+    std::cout << "Read " << memory_str << " " << value << std::endl;
   }
 
-  memory_[atoi(memory.substr(0, memory.length() - 1).c_str())] =
-      command::Command(command::Type::VALUE, command::AddressingType::IMMEDIATE, value);
+  int memory = atoi(memory_str.substr(0, memory_str.length() - 1).c_str());
+
+  memory_[memory] = command::Command(command::Type::VALUE, command::AddressingType::IMMEDIATE, value);
+  used_memory_[memory] = true;
 }
 
 ErrorCode Processor::RunPMC() {
@@ -105,6 +109,13 @@ ErrorCode Processor::RunPMC() {
   return return_value;
 }
 
+void Processor::PrintState() {
+  std::cout << "PMC state:" << std::endl;
+  for (auto it = used_memory_.begin(); it != used_memory_.end(); ++it) {
+    std::cout << it->first << ": " << it->second << std::endl;
+  }
+}
+
 #define COUNT_OPERAND(a, v) ErrorCode e = CountOperand(a, v); if(e <= 0) { return e; }
 
 ErrorCode Processor::RunCommand(const int& memory) {
@@ -127,6 +138,7 @@ ErrorCode Processor::RunCommand(const int& memory) {
     case (command::Type::STORE): {
       COUNT_OPERAND(current_command.addressing_type(), current_command.value())
       memory_[CacheType::OP].set_value(cache_[CacheType::AC]);
+      used_memory_[CacheType::OP] = true;
       return ErrorCode::CONTINUE;
     }
     case (command::Type::JUMP): {

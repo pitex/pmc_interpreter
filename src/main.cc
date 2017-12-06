@@ -16,22 +16,21 @@ struct Arguments {
 
 int Arguments::ParseArguments(const int& argc, char *argv[]) {
   int files = 0;
-  Arguments arguments;
 
-  for (int i = 0; i < argc; ++i) {
+  for (int i = 1; i < argc; ++i) {
     std::string arg(argv[i]);
 
     if (arg.substr(0, 2) == "--") {
-      arguments.params[arg] = true;
+      params[arg] = true;
     } else if (arg[0] == '-') {
     } else {
       switch (files) {
         case 0: {
-          arguments.cmd_file = arg;
+          cmd_file = arg;
           break;
         }
         case 1:
-          arguments.input_file = arg;
+          input_file = arg;
           break;
         default:
           return -1;

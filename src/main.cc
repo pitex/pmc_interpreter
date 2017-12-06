@@ -21,7 +21,7 @@ int Arguments::ParseArguments(const int& argc, char *argv[]) {
     std::string arg(argv[i]);
 
     if (arg.substr(0, 2) == "--") {
-      params[arg] = true;
+      params[arg.substr(2, arg.length() - 2)] = true;
     } else if (arg[0] == '-') {
     } else {
       switch (files) {
